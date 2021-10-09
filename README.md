@@ -2,8 +2,9 @@
 
 Take Excel file and Output PDF file.
 
-
-<span style="color:red">Note: this app only runs on a Windows system with Microsoft Office installed.</span>
+```
+- Note: this app only runs on a Windows system with Microsoft Office installed.
+```
 
 ## Environment
 - Windows 10
