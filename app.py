@@ -30,7 +30,7 @@ try:
         elif current_argument in ("-i","--input"):
             WB_PATH = current_value
         elif current_argument in ("-o","--output"):
-            PATH_TO_PDF = current_value
+            PATH_TO_PDF = current_value.split('.')[0]
             print("Exporting PDF file mode (%s)"%(current_value))
 except getopt.error as err:
     # Output errror, and return with an error code
@@ -39,29 +39,29 @@ except getopt.error as err:
 
 
 
-
 # ========================= main ============================
-# Open Excel Application Successfully
+# use a dynamic proxy
 excel = win32com.client.Dispatch('Excel.Application')
 excel.Visible = False 
 
 try:
     # Open Excel file
     wb = excel.Workbooks.Open(WB_PATH)
+    sheet_names = [sh.Name for sh in wb.Sheets]
+    # sheet_lst = list(range(1, len(sheet_names)+1))
 
-    # Select the sheets in order to output
-    wb.WorkSheets([1,2,3]).Select()
-    wb.ActiveSheet.ExportAsFixedFormat(0,PATH_TO_PDF)
+    for sheet_name in sheet_names:
+        # Select the sheets in order to output
+        wb.WorkSheets(sheet_name).Select()
+        wb.ActiveSheet.ExportAsFixedFormat(0,PATH_TO_PDF+sheet_name+'.pdf')        
 except NameError as err:
     print(colored('This program requires input and output arguments in order to proceed to the next task.','red'))
     sys.exit(2)
 except com_error as e:
     print(e)
-else:
-    end = time.perf_counter()
-    print("Total running time: ", end-start)
 finally:
     wb.Close()
     excel.Quit()
-    
 
+end = time.perf_counter()
+print("Total running time: ", end-start)
